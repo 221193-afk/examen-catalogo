@@ -4,8 +4,11 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
+
   private api = 'http://localhost:8080/api/products';
+
   constructor(private http: HttpClient) {}
+
   byCategory(id: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.api}/category/${id}`);
   }

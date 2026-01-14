@@ -1,9 +1,18 @@
 <div class="container py-4">
-  <h2 class="mb-3">Catálogo de Productos</h2>
+  <h2>Catálogo de Productos</h2>
 
   <div class="mb-3">
     <label class="form-label">Categoría</label>
-    <select class="form-select" (change)="onCategoryChange($event)">
+
+    <select
+      class="form-select"
+      [value]="selectedCategoryId"
+      (change)="onCategoryChange($event)"
+    >
+      <option value="0" disabled>
+        Seleccione una categoría
+      </option>
+
       <option *ngFor="let c of categories" [value]="c.id">
         {{ c.name }}
       </option>
@@ -18,11 +27,18 @@
         <th>Categoría</th>
       </tr>
     </thead>
+
     <tbody>
       <tr *ngFor="let p of products">
         <td>{{ p.name }}</td>
         <td>{{ p.price }}</td>
         <td>{{ p.category?.name }}</td>
+      </tr>
+
+      <tr *ngIf="products.length === 0">
+        <td colspan="3" class="text-center text-muted">
+          No hay productos para esta categoría
+        </td>
       </tr>
     </tbody>
   </table>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CategoryService } from './services/category';
 import { ProductService } from './services/product';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
     this.categoryService.getAll().subscribe(data => {
       this.categories = data;
 
+      // Cargar productos de la primera categoría automáticamente
       if (this.categories.length > 0) {
         this.selectedCategoryId = this.categories[0].id;
         this.loadProducts(this.selectedCategoryId);
@@ -34,8 +35,11 @@ export class AppComponent implements OnInit {
 
   onCategoryChange(event: any) {
     const id = Number(event.target.value);
-    this.selectedCategoryId = id;
-    this.loadProducts(id);
+
+    if (id > 0) {
+      this.selectedCategoryId = id;
+      this.loadProducts(id);
+    }
   }
 
   loadProducts(id: number) {
