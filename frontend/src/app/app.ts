@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CategoryService } from './services/category';
 import { ProductService } from './services/product';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule], // 🔥 ESTO ES LO QUE FALTABA
   templateUrl: './app.html'
 })
 export class AppComponent implements OnInit {
@@ -14,7 +15,7 @@ export class AppComponent implements OnInit {
   categories: any[] = [];
   products: any[] = [];
 
-  selectedCategoryId: number = 0;
+  selectedCategoryId: number | null = null;
 
   constructor(
     private categoryService: CategoryService,
@@ -24,27 +25,16 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.categoryService.getAll().subscribe(data => {
       this.categories = data;
-
-      // Cargar productos de la primera categoría automáticamente
-      if (this.categories.length > 0) {
-        this.selectedCategoryId = this.categories[0].id;
-        this.loadProducts(this.selectedCategoryId);
-      }
     });
   }
 
-  onCategoryChange(event: any) {
-    const id = Number(event.target.value);
-
-    if (id > 0) {
-      this.selectedCategoryId = id;
-      this.loadProducts(id);
+  onCategorySelected() {
+    if (this.selectedCategoryId !== null) {
+      this.productService
+        .byCategory(this.selectedCategoryId)
+        .subscribe(data => this.products = data);
+    } else {
+      this.products = [];
     }
-  }
-
-  loadProducts(id: number) {
-    this.productService.byCategory(id).subscribe(data => {
-      this.products = data;
-    });
   }
 }
