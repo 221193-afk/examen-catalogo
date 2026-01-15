@@ -1,15 +1,17 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ProductService {
 
-  private api = 'http://localhost:8080/api/products';
+  private apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
-  byCategory(id: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.api}/category/${id}`);
-  }
+  byCategory(categoryId: number) {
+  console.log('Llamando a /products/category/' + categoryId);  // ← agrega log
+  return this.http.get<any[]>(`${this.apiUrl}/products/category/${categoryId}`);
+}
 }
